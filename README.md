@@ -1,6 +1,6 @@
-# CSC15008 - Applied Natural Language Processing
+# CS158 - Xử lý ngôn ngữ tự nhiên ứng dụng
 
-## Topics
+## Chủ đề
 - W02: mô hình ngôn ngữ.
 
 ## LICENSE
