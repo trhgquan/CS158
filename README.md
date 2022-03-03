@@ -3,7 +3,7 @@
 ## Topics
 - W02: mô hình ngôn ngữ.
 
-# LICENSE
+## LICENSE
 License goes here.
 
 VNUHCM - University of Science, mùa Xuân 2022.
