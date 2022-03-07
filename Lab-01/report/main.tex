@@ -109,7 +109,7 @@ Thông tin của bộ công cụ có thể đọc thêm tại đây:
 \item GitHub repository: \href{https://github.com/kpu/kenlm}{https://github.com/kpu/kenlm}
 \end{itemize}
 \subsection{Cài đặt \& biên dịch}
-Báo cáo được thực hiện với môi trường Ubuntu 21.10.
+Báo cáo được thực hiện trên môi trường Ubuntu 21.10.
 \begin{enumerate}
 \item Trên môi trường Ubuntu, clone GitHub repository của project về:
 \begin{lstlisting}[language=sh]
@@ -398,22 +398,22 @@ inverse_product = 1 / inverse_product
 # Tinh perplexity = nroot(inverse_prod) = inverse_prod ^ (1/n)
 perplexity = math.pow(inverse_product, 1.0 / len(score_list))
 
-print('Perplexity of sentence {0} is: {1}', s, perplexity)
+print('Sentence perplexity:', perplexity)
 \end{lstlisting}
 Ngoài ra, ta có thể sử dụng method \texttt{kenlm.Model.perplexity(str)} đã được cài đặt sẵn\footnote{Chú ý là cách này không tính tag bắt đầu (\texttt{<s>}) / kết thúc câu (\texttt{</s>}) như là một từ. Tham khảo đoạn code tính \href{https://github.com/kpu/kenlm/blob/217e219a34f8ac5d096b2fff3dede82b5a182a88/python/kenlm.pyx\#L209-L215}{tại đây}}:
 \begin{lstlisting}[language=python]
 import kenlm
 
 model = kenlm.Model('model.arpa')
-s = 'this is a sample sentence .'
-perplexity = model.perplexity(s)
+sentence = 'this is a sample sentence .'
+perplexity = model.perplexity(sentence)
 
-print('Perplexity of sentence {0} is: {1}', s, perplexity)
+print('Sentence perplexity:', perplexity)
 \end{lstlisting}
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=.70]{python-demo.PNG}
+    \includegraphics[scale=.60]{python-demo.PNG}
     \caption{Demo package kenlm trên Python}
 \end{figure}
 
