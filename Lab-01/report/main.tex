@@ -137,7 +137,7 @@ KenLM sẽ tạo một $n$-gram model dựa trên tập dữ liệu đầu vào 
 \begin{lstlisting}[language=sh]
 ./bin/lmplz -o n <text >text.arpa
 \end{lstlisting}
-Ví dụ, ta cần tạo một 3-gram model từ tập tin \texttt{input.in}, lưu ra tập tin \texttt{build/model.arpa}. Khi đó câu lệnh trở thành:
+Ví dụ, ta cần tạo một trigram model từ tập tin \texttt{input.in}, lưu ra tập tin \texttt{build/model.arpa}. Khi đó câu lệnh trở thành:
 \begin{lstlisting}[language=sh]
 ./bin/lmplz -o 3 <text.in >model.arpa
 \end{lstlisting}
@@ -171,13 +171,13 @@ ARPA là định dạng file lưu các mô hình ngôn ngữ. Người dùng có
 \begin{lstlisting}
 \\data\\
 \end{lstlisting}
-Các dòng tiếp theo là số lượng của mỗi loại $n$-gram. Ví dụ:
+Các dòng tiếp theo là số lượng của mỗi loại $n$-gram. Ví dụ cho model trigram:
 \begin{lstlisting}
 ngram 1=500
 ngram 2=1250
 ngram 3=2500
 \end{lstlisting}
-Các dòng theo sau, mỗi dòng lần lượt là xác suất, từ và backoff weight của từng từ. Ví dụ cho model 3-gram:
+Các dòng theo sau, mỗi dòng lần lượt là xác suất, từ và backoff weight của từng từ:
 \begin{lstlisting}
 \1-grams:
 log10_prob(word1) word1 log10_backoff(word1)
@@ -214,7 +214,7 @@ Data mẫu được trích từ bản dịch tiếng Anh tác phẩm Con Đầm 
 Data (trước và sau preprocess) cùng với file model ARPA có thể download ở \href{https://studenthcmusedu-my.sharepoint.com/:f:/g/personal/19120338_student_hcmus_edu_vn/EqFiWm6iywdKms6WFubsNOYBOzqfFttfH8P81jBT8gcZIw?e=truaMM}{link này}\label{download-model}.
 
 \subsection{Huấn luyện}
-Chúng ta tiến hành huấn luyện model 3-gram ($n = 3$)
+Chúng ta tiến hành huấn luyện model trigram ($n = 3$)
 \begin{lstlisting}[language=sh]
 ./bin/lmplz -o 3 <../../CS158/queenofspades.txt >model.arpa
 \end{lstlisting}
@@ -286,11 +286,11 @@ echo "my grandmother never gambles ." | ./bin/query model.arpa
 
 \item Từ \texttt{my}: xét cụm \texttt{<s> my}, cụm này không có trong từ điển. Khi đó 
 $$P(\texttt{my | <s>}) = P(\texttt{my}) + B(\texttt{<s>})\footnote{$B(w_i | w_1w_2..w_{i - 1})$ là giá trị backoff của câu $w_1w_2..w_i$; $B(w_i)$ là giá trị backoff của từ $w_i$} = -2.392768 - 0.55055535 \approx -2.9433231$$
-Vì chúng ta backoff từ 2-gram về 1-gram, nên ở đây giá trị $n = 1$.
+Vì chúng ta backoff từ bigram về unigram, nên ở đây giá trị $n = 1$.
 
 \item Từ \texttt{mother}: xét cụm \texttt{<s> my grandmother}, cụm này không có trong từ điển. Bù lại, ta đã có $P(\texttt{grandmother | my}) = -0.6276494; P(\texttt{my | <s>})$ đã tính bên trên, nên cụm \texttt{my <s>} xem như đã tồn tại và có giá trị backoff bằng 0. Do đó,
 $$P(\texttt{grandmother | <s> my}) = -0.6276494 + 0 = -0.6276494$$
-Ta backoff từ 3-gram về 2-gram, nên giá trị $n = 2$.
+Ta backoff từ trigram về bigram, nên giá trị $n = 2$.
 
 \item Từ \texttt{never}: xét cụm \texttt{my grandmother never} đã tồn tại trong model và có xác suất bằng -1.5922568. Vì vậy
 $$P(\texttt{never | my grandmother}) = -1.5922568$$
@@ -303,7 +303,7 @@ $$
 $$
 = -0.556144 -0.025297174 \approx -0.58144116
 $$
-vì backoff từ 3-gram về 2-gram nên $n = 2$.
+vì backoff từ trigram về bigram nên $n = 2$.
 \end{itemize}
 Các giá trị như điểm (total score), perplexity của câu: cách tính đã nêu bên trên nên không được đề cập ở đây.
 \subsubsection{Câu ngoài văn bản}
@@ -419,7 +419,7 @@ print('Sentence perplexity:', perplexity)
 
 \section{Kết luận}
 \begin{itemize}
-\item KenLM huấn luyện và truy vấn rất nhanh trên mô hình.
+\item KenLM huấn luyện mô hình và truy vấn rất nhanh .
 \item Các câu không hợp lệ dễ phát hiện (total score thấp, perplexity cao).
 \end{itemize}
 \noindent Nhìn chung, KenLM là một công cụ có hiệu năng cao, độ chính xác đáng tin cậy, rất đáng sử dụng.
