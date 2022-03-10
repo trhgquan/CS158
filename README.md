@@ -3,9 +3,9 @@ Tóm tắt lí thuyết & lab
 
 ## Chủ đề
 ### Lí thuyết
-- Topic 1: mô hình ngôn ngữ
+- Topic 1: language-models aka mô hình ngôn ngữ
     - W02.
-- Topic 2: phân lớp văn bản.
+- Topic 2: text-classification aka phân lớp văn bản.
     - W03: Naive Bayes.
 
 ### Lab
