@@ -7,6 +7,7 @@ Tóm tắt lí thuyết & lab môn học Xử lý ngôn ngữ tự nhiên ứng 
     - W02.
 - Topic 2: text-classification aka phân lớp văn bản.
     - W03: Naive Bayes.
+    - W04: Opinion Mining & Sentiment Analysis.
 
 ### Lab
 - Lab-01: Tìm hiểu công cụ KenLM (code + report LaTeX). 

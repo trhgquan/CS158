@@ -10,6 +10,7 @@ def parsing(sentence : str) -> tuple:
     punctuations = '[{0}]'.format(string.punctuation)
 
     sentence = sentence.lower()
+    sentence = re.sub('\w*\d\w*', '', sentence)
     sentence = re.sub(punctuations, '', sentence)
 
     return (sentence, sentence_class)
@@ -21,8 +22,6 @@ def main():
             sentence, sentence_class = parsing(line.lower().strip())
             train_sentences.append(sentence)
             train_classes.append(sentence_class)
-    
-    print(train_sentences[:10])
 
     nb = NaiveBayes()
     
@@ -37,9 +36,11 @@ def main():
 
     y_pred = nb.predict(test_sentences)
 
-    print(classification_report(y_pred, test_classes))
-    print(confusion_matrix(y_pred, test_classes))
-    print('Accuracy score:', nb.score(y_pred, test_classes))
+    print('NB-from scratch')
+    print(classification_report(test_classes, y_pred))
+    print('Accuracy score:', accuracy_score(test_classes, y_pred))
+    print('Confusion matrix:\n', confusion_matrix(test_classes, y_pred))
+
 
 if __name__ == '__main__':
     main()
