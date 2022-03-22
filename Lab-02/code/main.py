@@ -16,12 +16,20 @@ def parsing(sentence : str) -> tuple:
     return (sentence, sentence_class)
 
 def main():
+    item_summerize = dict()
     with open('data/TREC.train.all', 'r+') as f:
         train_sentences, train_classes = [], []
         for line in f.readlines():
             sentence, sentence_class = parsing(line.lower().strip())
             train_sentences.append(sentence)
             train_classes.append(sentence_class)
+
+            if sentence_class not in item_summerize:
+                item_summerize[sentence_class] = 1
+            else:
+                item_summerize[sentence_class] += 1
+
+    print('Class items summerize', item_summerize)
 
     nb = NaiveBayes()
     
@@ -40,7 +48,6 @@ def main():
     print(classification_report(test_classes, y_pred))
     print('Accuracy score:', accuracy_score(test_classes, y_pred))
     print('Confusion matrix:\n', confusion_matrix(test_classes, y_pred))
-
 
 if __name__ == '__main__':
     main()

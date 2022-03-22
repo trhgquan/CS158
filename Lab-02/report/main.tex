@@ -1,0 +1,57 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage[colorlinks=true,linkcolor=blue, citecolor=red]{hyperref}
+\usepackage{url}
+\usepackage[top=.75in, left=.5in, right=.5in, bottom=1in]{geometry}
+\usepackage[utf8]{vietnam}
+\setlength{\headheight}{29.43912pt}
+
+\pagestyle{fancy}
+\lhead{
+Báo cáo Lab 02 - Naive Bayes Classifier
+}
+\rhead{
+Trường Đại học Khoa học Tự nhiên - ĐHQG HCM\\
+CSC150008 - Xử lý ngôn ngữ tự nhiên ứng dụng
+}
+\lfoot{\LaTeX\ by \href{https://github.com/trhgquan}{Quan, Tran Hoang}}
+
+\begin{document}
+\noindent Sinh viên thực hiện: Trần Hoàng Quân (MSSV: 19120338)
+\section{Chạy chương trình}
+File thực thi là \texttt{main.py}. Thầy chạy \texttt{pip install -r requirements.txt} trước, sau đó chạy \texttt{python main.py} là được.
+\section{Tiền xử lí \& huấn luyện mô hình}
+Dữ liệu văn bản trải qua các bước tiền xử lí sau:
+\begin{itemize}
+\item Chuyển thành chữ thường.
+\item Loại bỏ dấu câu.
+\item Loại bỏ chữ số có trong câu.
+\end{itemize}
+Vì có sự chênh lệch lớn giữa số lượng câu có nhãn 2 với các nhãn còn lại, nên em chỉ chọn mỗi nhãn 50 câu để huấn luyện.
+
+\section{Kết quả huấn luyện}
+Test trên 500 câu trong tập tin test cho kết quả như sau:
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+label & P (precision) & R (recall) & f1-score \\
+\hline
+0 & 0.67 & 0.89 & 0.77 \\
+1 & 0.50 & 0.44 & 0.47 \\
+2 & 0.33 & 0.33 & 0.33 \\
+3 & 0.40 & 0.43 & 0.41 \\
+4 & 0.46 & 0.47 & 0.46 \\
+5 & 0.64 & 0.42 & 0.51 \\
+\hline
+Tổng & 0.56 & 0.56 & 0.55 \\
+\hline
+\end{tabular}
+\caption{Kết quả huấn luyện}
+\end{table}
+\end{document}

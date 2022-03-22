@@ -38,11 +38,15 @@ class NaiveBayes:
 
         # Prior của lớp c = số sample lớp c / tổng số sample
         self.__priors = np.zeros(n_classes, dtype = np.float64)
-        self.__vect = [None] * n_classes
+
+        # Số lần xuất hiện của từng keyword lưu trong __count,
+        # bộ vocabulary lưu trong __vocab
         self.__count, self.__vocab = [None] * n_classes, [None] * n_classes
     
         for i, c in enumerate(self.__classes):
             X_for_class_c = self.__X[self.__y == c]
+            
+            # Giới hạn lại 86 sentences mỗi class (dataset imbalanced => undersampling)
             X_for_class_c = X_for_class_c[:86]
 
             self.__priors[i] = np.log(X_for_class_c.shape[0]) - np.log(n_samples)
@@ -50,14 +54,14 @@ class NaiveBayes:
             vect = CountVectorizer(
                 stop_words = self.__stopwords,
             )
-            self.__vect[i] = vect.fit_transform(X_for_class_c)
+            vect_fit = vect.fit_transform(X_for_class_c)
             self.__vocab[i] = vect.vocabulary_
-            self.__count[i] = self.__vect[i].toarray().sum(axis = 0)
+            self.__count[i] = vect_fit.toarray().sum(axis = 0)
 
     def __likelihood(self, class_index : int, x : str) -> list:
         '''Calculate P(x|class_index) probability
 
-        The formula is (alpha + count(class_index)) / (len(class_index) + alpha * vocab_size)
+        The formula is P(x|class_index) = (alpha + count(x in class_index)) / (len(class_index) + alpha * vocab_size)
 
         Input:
             - class_index : class index (in this case, the sentence's label).
@@ -71,7 +75,8 @@ class NaiveBayes:
         for w in x.split(' '):
             if w in self.__vocab[class_index].keys():
                 word_index = self.__vocab[class_index][w]
-                result.append(np.log((self.__alpha + self.__count[class_index][word_index]) / (len(self.__vocab[class_index].keys()) + self.__alpha * self.__vocabulary_size)))
+                likelihood = np.log(self.__alpha + self.__count[class_index][word_index]) - np.log(len(self.__vocab[class_index].keys()) + self.__alpha * self.__vocabulary_size)
+                result.append(likelihood)
 
         return result
 
