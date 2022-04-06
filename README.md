@@ -23,7 +23,7 @@ Tóm tắt lí thuyết & lab môn học Xử lý ngôn ngữ tự nhiên ứng 
     | TREC | 6       | 10                   | 5952         | 9592       | 9125                           | 500       |
 
 - Lab-03: Tìm hiểu công cụ [jupyter-text2code](https://github.com/deepklarity/jupyter-text2code) (notebook + report LaTeX)
-
+    - Tài nguyên sử dụng: [COVID-19 data from kaggle](https://www.kaggle.com/datasets/imdevskp/corona-virus-report)
 - Lab-04: Unknown
 
 ## LICENSE
