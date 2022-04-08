@@ -10,6 +10,8 @@ Tóm tắt lí thuyết & lab môn học Xử lý ngôn ngữ tự nhiên ứng 
     - W04: Opinion Mining & Sentiment Analysis.
 - Topic 3: Deep Learning
     - W05: first glance at deep learning.
+- Topic 4: Machine Translation
+    - W06 + 07: Machine Translation (chua viet notebook)
 
 ### Lab
 - Lab-01: Tìm hiểu công cụ KenLM (code + report LaTeX). 
@@ -19,6 +21,10 @@ Tóm tắt lí thuyết & lab môn học Xử lý ngôn ngữ tự nhiên ứng 
     | Data | Classes | Avg. sentence length | Dataset size | Vocab size | Num. words present in word2vec | Test size |
     |------|---------|----------------------|--------------|------------|--------------------------------|-----------|
     | TREC | 6       | 10                   | 5952         | 9592       | 9125                           | 500       |
+
+- Lab-03: Tìm hiểu công cụ [jupyter-text2code](https://github.com/deepklarity/jupyter-text2code) (notebook + report LaTeX)
+    - Tài nguyên sử dụng: [COVID-19 data from kaggle](https://www.kaggle.com/datasets/imdevskp/corona-virus-report)
+- Lab-04: Unknown
 
 ## LICENSE
 This project is licensed under the terms of [The GNU GPL v3.0 License](LICENSE)
