@@ -10,8 +10,8 @@ Tóm tắt lí thuyết & lab môn học Xử lý ngôn ngữ tự nhiên ứng 
     - W04: Opinion Mining & Sentiment Analysis.
 - Topic 3: Deep Learning
     - W05: first glance at deep learning.
-- Topic 4: Question Answering
-    - W06: Question Answering (chua viet notebook)
+- Topic 4: Machine Translation
+    - W06 + 07: Machine Translation (chua viet notebook)
 
 ### Lab
 - Lab-01: Tìm hiểu công cụ KenLM (code + report LaTeX). 
