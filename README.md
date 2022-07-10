@@ -24,7 +24,7 @@ Tóm tắt lí thuyết & lab môn học Xử lý ngôn ngữ tự nhiên ứng 
 
 - Lab-03: Tìm hiểu công cụ [jupyter-text2code](https://github.com/deepklarity/jupyter-text2code) (notebook + report LaTeX)
     - Tài nguyên sử dụng: [COVID-19 data from kaggle](https://www.kaggle.com/datasets/imdevskp/corona-virus-report)
-- Lab-04: Tìm hiểu bài toán phân lớp văn bản phân tầng (Hierarchical Multi-label Text Classification), sử dụng mô hình [RandolphVI/Hierarchical-Multi-Label-Text-Classification](https://github.com/RandolphVI/Hierarchical-Multi-Label-Text-Classification) (code + report LaTeX)
+- Lab-04: Tìm hiểu bài toán phân lớp văn bản phân tầng (Hierarchical Multi-label Text Classification), sử dụng mô hình [RandolphVI/Hierarchical-Multi-Label-Text-Classification](https://github.com/RandolphVI/Hierarchical-Multi-Label-Text-Classification) (report LaTeX)
 
 ## LICENSE
 This project is licensed under the terms of [The GNU GPL v3.0 License](LICENSE)
