@@ -54,4 +54,35 @@ Tổng & 0.56 & 0.56 & 0.55 \\
 \end{tabular}
 \caption{Kết quả huấn luyện}
 \end{table}
+
+\section{Phát triển thêm - \today}
+Phần này phát triển thêm so với phần đã làm bên trên. Ở đây mình cài bằng thuật toán mô tả trong sách Speech and Language Processing (3rd edition draft) của thầy Dan Jurafsky\cite{10.5555/555733}. Khác biệt lớn nhất ở phần này mình sẽ \textbf{không bỏ qua stopwords}. Kết quả huấn luyện \& testing\footnote{với training \& testing dataset như ban đầu} ở bảng sau:
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+label & P (precision) & R (recall) & f1-score \\
+\hline
+0 & 0.83 & 0.75 & 0.79 \\
+1 & 0.62 & 0.61 & 0.61 \\
+2 & 0.88 & 0.78 & 0.82 \\
+3 & 0.81 & 0.95 & 0.87 \\
+4 & 0.68 & 0.94 & 0.79 \\
+5 & 0.97 & 0.73 & 0.83 \\
+\hline
+Accuracy &  &  & 0.55 \\
+Macro AVG & 0.80 & 0.79 & 0.79 \\
+Weighted AVG & 0.79 & 0.78 & 0.78 \\
+\hline
+\end{tabular}
+\caption{Kết quả huấn luyện lúc sau}
+\end{table}
+
+
+
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{section}{Tài liệu}
+\bibliographystyle{plain}
+\bibliography{main}
 \end{document}

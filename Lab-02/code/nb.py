@@ -1,111 +1,113 @@
-from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
+from tqdm import tqdm
 
 class NaiveBayes:
-    def __init__(self) -> None:
-        self.__alpha = 0.000001 # magic number
+    '''Naive Bayes implementation, 
+    re-implemented with the algorithm in Dan Jurafsky's Speech and Language Processing (3rd ed. draft)
+    https://web.stanford.edu/~jurafsky/slp3/4.pdf
+    '''
 
-        with open('data/stopwords.txt', 'r+', encoding = 'utf8') as f:
-            self.__stopwords = []
-            for line in f.readlines():
-                self.__stopwords.append(line.strip().lower())
+    def __init__(self, stopword_list = []) -> None:
+        '''Initialise variables.
+        '''
 
-        self.__vectorizer = CountVectorizer(
-            stop_words = self.__stopwords,
-        )
+        self.__stopword_list = stopword_list
+
+        self.__number_docs = 0
+        self.__number_classes = 0
+        self.__vocabulary = []
+        self.__vocab_len = 0
+        self.__classes = []
+        self.__prior = {}
+        self.__likelihood = {}
+        self.__doc_in_class = {}
+
+        print('Finished initialisation')
+
+    @staticmethod
+    def get_vocabulary(sentence_list : list, stopwords_list : list) -> list:
+        '''Get vocabulary from a sentence list and stopwords list.
+        '''
+        vocabulary = []
+
+        for sentence in sentence_list:
+            for word in sentence.split(' '):
+                if len(word) > 0 and word not in stopwords_list and word not in vocabulary:
+                    vocabulary.append(word)
+
+        return vocabulary
+    
+    @staticmethod
+    def doc_in_class(sentences_list : list, classes : list, classes_list : list) -> dict:
+        '''Divide list of sentences to a dictionary: (key : (sentence1, .., sentence n))
+        '''
+        doc_in_class_dict = {}
+
+        for this_class in classes:
+            doc_in_class_dict[this_class] = []
+            for sentence, that_class in zip(sentences_list, classes_list):
+                if that_class == this_class:
+                    doc_in_class_dict[this_class].append(sentence)
+        
+        return doc_in_class_dict
+    
+    @staticmethod
+    def count(word : str, big_doc : list) -> int:
+        '''Count a word's appearance in a doc (list of sentences).
+        '''
+        count = 0
+
+        for sentence in big_doc:
+            for word_ in sentence.split(' '):
+                if word_ == word:
+                    count += 1
+
+        return count
 
     def fit(self, sentences_list : list, classes_list : list) -> None:
         '''Fit a model with sentences list and classes list
-
-        Input:
-            - sentences_list : list of sentences (if you're familiar with sklearn.NB, this is X)
-            - classes_list : list of classes (if you're familiar with sklearn.NB, this is y)
         '''
-        self.__vectorizer = self.__vectorizer.fit(sentences_list)
+        self.__number_docs = len(sentences_list)
+        self.__classes = list(set(classes_list))
+        self.__number_classes = len(self.__classes)
+        self.__vocabulary = NaiveBayes.get_vocabulary(sentences_list, self.__stopword_list)
+        self.__vocab_len = len(self.__vocabulary)
+        self.__doc_in_class = NaiveBayes.doc_in_class(sentences_list, self.__classes, classes_list)
 
-        self.__vocabulary_size = len(self.__vectorizer.vocabulary_)
+        print('Finished generating required stats..')
 
-        self.__X = np.array(sentences_list)
+        for current_class in self.__classes:
+            print(f'Training class {current_class}')
 
-        # Đếm số class
-        self.__y = np.array(classes_list)
-        
-        n_samples = len(self.__X)
+            current_class_doc = len(self.__doc_in_class[current_class])
+            self.__prior[current_class] = np.log(self.__number_docs) - np.log(current_class_doc)
 
-        self.__classes = np.unique(classes_list)
+            count_all_words = sum([(NaiveBayes.count(word, self.__doc_in_class[current_class]) + 1) for word in self.__vocabulary])
 
-        n_classes = len(self.__classes)
+            for word in tqdm(self.__vocabulary):
+                count_this_word = NaiveBayes.count(word, self.__doc_in_class[current_class])
 
-        # Prior của lớp c = số sample lớp c / tổng số sample
-        self.__priors = np.zeros(n_classes, dtype = np.float64)
+                word_prob = np.log(count_this_word + 1) - np.log(count_all_words)
 
-        # Số lần xuất hiện của từng keyword lưu trong __count,
-        # bộ vocabulary lưu trong __vocab
-        self.__count, self.__vocab = [None] * n_classes, [None] * n_classes
-    
-        for i, c in enumerate(self.__classes):
-            X_for_class_c = self.__X[self.__y == c]
-            
-            # Giới hạn lại 86 sentences mỗi class (dataset imbalanced => undersampling)
-            X_for_class_c = X_for_class_c[:86]
+                if current_class not in self.__likelihood:
+                    self.__likelihood[current_class] = { word : word_prob }
+                else:
+                    self.__likelihood[current_class].update({ word : word_prob })
 
-            self.__priors[i] = np.log(X_for_class_c.shape[0]) - np.log(n_samples)
-            
-            vect = CountVectorizer(
-                stop_words = self.__stopwords,
-            )
-            vect_fit = vect.fit_transform(X_for_class_c)
-            self.__vocab[i] = vect.vocabulary_
-            self.__count[i] = vect_fit.toarray().sum(axis = 0)
-
-    def __likelihood(self, class_index : int, x : str) -> list:
-        '''Calculate P(x|class_index) probability
-
-        The formula is P(x|class_index) = (alpha + count(x in class_index)) / (len(class_index) + alpha * vocab_size)
-
-        Input:
-            - class_index : class index (in this case, the sentence's label).
-            - x : in this case a sentence.
-        
-        Output:
-            - list of probabilities.
+    def __predict(self, sentence : str) -> int:
+        '''Predict a sentence.
         '''
-        result = []
 
-        for w in x.split(' '):
-            if w in self.__vocab[class_index].keys():
-                word_index = self.__vocab[class_index][w]
-                likelihood = np.log(self.__alpha + self.__count[class_index][word_index]) - np.log(len(self.__vocab[class_index].keys()) + self.__alpha * self.__vocabulary_size)
-                result.append(likelihood)
+        sum_prob = [self.__prior[c] for c in self.__classes]
 
-        return result
+        for this_class in self.__classes:
+            for word in sentence.split(' '):
+                if word in self.__vocabulary:
+                    sum_prob[this_class] += self.__likelihood[this_class][word]
 
-    def __classify_sample(self, x : str) -> int:
-        '''Find the best label for a sentence.
-
-        Input:
-            - x : a sentence (yey!)
-        
-        Output:
-            - label for that sentence.
-        '''
-        posteriors = []
-
-        for class_index, _ in enumerate(self.__classes):
-            posterior = self.__priors[class_index] * np.sum(self.__likelihood(class_index, x))
-            posteriors.append(posterior)
-
-        return self.__classes[np.argmax(posteriors)]
+        return np.argmax(np.array(sum_prob, dtype = np.float64))
 
     def predict(self, sentences_list : list) -> list:
-        '''Predict a given list.
-
-        Input:
-            - sentences_list (list) : list of sentences to be predicted.
-
-        Output:
-            - a list containing predicted labels.
+        '''Predict a given list of sentences.
         '''
-        y_predicted = np.array([self.__classify_sample(x) for x in sentences_list])
-
-        return y_predicted
+        return [self.__predict(s) for s in sentences_list]
