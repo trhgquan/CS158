@@ -7,12 +7,11 @@ class NaiveBayes:
     https://web.stanford.edu/~jurafsky/slp3/4.pdf
     '''
 
-    def __init__(self, stopword_list = []) -> None:
+    def __init__(self) -> None:
         '''Initialise variables.
         '''
 
-        self.__stopword_list = stopword_list
-
+        self.__stopwords_list = []
         self.__number_docs = 0
         self.__number_classes = 0
         self.__vocabulary = []
@@ -21,8 +20,6 @@ class NaiveBayes:
         self.__prior = {}
         self.__likelihood = {}
         self.__doc_in_class = {}
-
-        print('Finished initialisation')
 
     @staticmethod
     def get_vocabulary(sentence_list : list, stopwords_list : list) -> list:
@@ -64,27 +61,27 @@ class NaiveBayes:
 
         return count
 
-    def fit(self, sentences_list : list, classes_list : list) -> None:
+    def fit(self, sentences_list : list, classes_list : list, stopwords_list = [], verbose = True) -> None:
         '''Fit a model with sentences list and classes list
         '''
+        self.__stopwords_list = stopwords_list
+
         self.__number_docs = len(sentences_list)
         self.__classes = list(set(classes_list))
         self.__number_classes = len(self.__classes)
-        self.__vocabulary = NaiveBayes.get_vocabulary(sentences_list, self.__stopword_list)
+        self.__vocabulary = NaiveBayes.get_vocabulary(sentences_list, self.__stopwords_list)
         self.__vocab_len = len(self.__vocabulary)
         self.__doc_in_class = NaiveBayes.doc_in_class(sentences_list, self.__classes, classes_list)
 
-        print('Finished generating required stats..')
-
         for current_class in self.__classes:
-            print(f'Training class {current_class}')
-
             current_class_doc = len(self.__doc_in_class[current_class])
             self.__prior[current_class] = np.log(self.__number_docs) - np.log(current_class_doc)
 
             count_all_words = sum([(NaiveBayes.count(word, self.__doc_in_class[current_class]) + 1) for word in self.__vocabulary])
 
-            for word in tqdm(self.__vocabulary):
+            verbose_set = tqdm(self.__vocabulary) if verbose else self.__vocabulary
+
+            for word in verbose_set:
                 count_this_word = NaiveBayes.count(word, self.__doc_in_class[current_class])
 
                 word_prob = np.log(count_this_word + 1) - np.log(count_all_words)
@@ -107,7 +104,8 @@ class NaiveBayes:
 
         return np.argmax(np.array(sum_prob, dtype = np.float64))
 
-    def predict(self, sentences_list : list) -> list:
+    def predict(self, sentences_list : list, verbose = True) -> list:
         '''Predict a given list of sentences.
         '''
-        return [self.__predict(s) for s in sentences_list]
+        verbose_list = tqdm(sentences_list) if verbose else sentences_list
+        return [self.__predict(s) for s in verbose_list]
